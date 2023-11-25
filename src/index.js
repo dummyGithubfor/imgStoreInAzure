@@ -155,7 +155,7 @@ app.get('/api/containerImages/:containerName', (req, res) => {
         const imageUrl = blobService.getUrl(containerName, entry.name);
         return imageUrl;
       });
-      res.json(blobList);
+      res.json({upcomingFestivals:blobList});
     } else {
       res.status(500).send('Error listing container images');
     }
