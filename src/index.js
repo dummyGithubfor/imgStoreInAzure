@@ -72,7 +72,7 @@ const azure = require('azure-storage');
 const express = require('express');
 const app = express();
 const multer = require('multer');
-
+const { isSameDay } = require('date-fns');
 const storageAccount = 'storeimagesinazure';
 const storageAccessKey = 'BTzBs36CoQOBrRsjeA+VViNVNiMIn1aH0QXN/KshGf2+qPGpMVcTbwCe8lo8ZcQUBBS+aOVzgRDs+ASt7/NMFw==';
 
@@ -161,6 +161,43 @@ app.get('/api/containerImages/:containerName', (req, res) => {
     }
   });
 });
+
+
+// __________________________get mrng, afternoon and night images____________________
+app.get('/api/fullDayImages', (req, res) => {
+  // const containerNames = req.params.containerNames.split(',');
+const containerNames = [ 'morning', 'night', 'afternoon' ];
+  const fetchImages = (containerName) => {
+    return new Promise((resolve, reject) => {
+      blobService.listBlobsSegmented(containerName, null, (error, result, response) => {
+        if (!error) {
+          const blobList = result.entries.map(entry => {
+            const imageUrl = blobService.getUrl(containerName, entry.name);
+            return imageUrl;
+          });
+          resolve({ containerName, images: blobList });
+        } else {
+          reject(`Error listing container images for ${containerName}`);
+        }
+      });
+    });
+  };
+
+  // Fetch images for each container concurrently using Promise.all
+  Promise.all(containerNames.map(fetchImages))
+    .then(results => {
+      const responseObj = {};
+      results.forEach(result => {
+        responseObj[result.containerName] = result.images;
+      });
+      res.json(responseObj);
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(500).send('Error fetching container images');
+    });
+});
+
 
 
 const port = process.env.PORT || 3000;
