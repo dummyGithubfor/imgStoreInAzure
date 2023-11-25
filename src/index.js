@@ -190,7 +190,7 @@ const containerNames = [ 'morning', 'night', 'afternoon' ];
       results.forEach(result => {
         responseObj[result.containerName] = result.images;
       });
-      res.json(responseObj);
+      res.json({DailyData:responseObj});
     })
     .catch(error => {
       console.error(error);
