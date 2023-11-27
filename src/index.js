@@ -187,13 +187,14 @@ const containerNames = [ 'morning', 'night', 'afternoon', 'evening'];
 
   // Fetch images for each container concurrently using Promise.all
   Promise.all(containerNames.map(fetchImages))
-    .then(results => {
-      const responseObj = {};
-      results.forEach(result => {
-        responseObj[result.containerName] = result.images;
-      });
-      res.json({DailyData:responseObj});
-    })
+  .then(results => {
+    const responseArray = results.map(result => ({
+      containerName: result.containerName,
+      images: result.images,
+    }));
+
+    res.status(200).json({DailyData: responseArray});
+  })
     .catch(error => {
       console.error(error);
       res.status(500).send('Error fetching container images');
