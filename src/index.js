@@ -80,7 +80,7 @@ const storageAccessKey = 'BTzBs36CoQOBrRsjeA+VViNVNiMIn1aH0QXN/KshGf2+qPGpMVcTbw
 
 const blobService = azure.createBlobService(storageAccount, storageAccessKey);
 
-const containers = ['morning', 'afternoon', 'festival', 'evening', 'namebaground'];
+const containers = ['morning', 'afternoon', 'festival', 'evening', 'namebackground'];
 
 containers.forEach((containerName) => {
   blobService.createContainerIfNotExists(containerName, { publicAccessLevel: 'blob' }, (error, result, response) => {
@@ -159,7 +159,7 @@ app.get('/api/:containerName', (req, res) => {
       });
       res.status(200).json({
         containerName: containerName,
-        blobList: blobList
+        images: blobList
       });
     } else {
       res.status(500).send('Error listing container images');
