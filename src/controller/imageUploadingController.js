@@ -6,6 +6,8 @@ const storageAccessKey = 'BTzBs36CoQOBrRsjeA+VViNVNiMIn1aH0QXN/KshGf2+qPGpMVcTbw
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const blobService = azure.createBlobService(storageAccount, storageAccessKey);
+
+
 // Define the API endpoint for uploading images
 // app.post('/api/uploadImage', upload.single('image'), (req, res) => {
 //     const containerName = 'festival';
@@ -64,7 +66,6 @@ const getImage = async function(req, res){
 const getDailyImages = async function (req, res) {
     try {
       let containerNames = req.params.containerNames;
-      
       if (containerNames && containerNames.toLowerCase() === "dailydata") {
         containerNames = ['morning', 'afternoon', 'night', 'evening'];
       } else {
